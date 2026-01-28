@@ -6,6 +6,10 @@
 
 A modern, intelligent web application for tracking parcels across **6 major Indian carriers** in real-time. Built with React, Material UI, FastAPI, and powered by the TrackingMore API.
 
+🔗 **Live Demo:** [https://dak-dash.vercel.app/](https://dak-dash.vercel.app/)
+
+📡 **Backend API:** [https://dakdash-api.onrender.com](https://dakdash-api.onrender.com)
+
 ---
 
 ## 💡 Problem Statement
