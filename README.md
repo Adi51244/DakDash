@@ -3,12 +3,23 @@
 ![DakDash Banner](https://img.shields.io/badge/DakDash-India%20Post%20Tracker-C62828?style=for-the-badge&logo=postal-horn)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/Adi51244/DakDash?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/Adi51244/DakDash?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/Adi51244/DakDash?style=for-the-badge)
 
 A modern, intelligent web application for tracking parcels across **6 major Indian carriers** in real-time. Built with React, Material UI, FastAPI, and powered by the TrackingMore API.
 
 🔗 **Live Demo:** [https://dak-dash.vercel.app/](https://dak-dash.vercel.app/)
 
 📡 **Backend API:** [https://dakdash-api.onrender.com](https://dakdash-api.onrender.com)
+
+⭐ **If you find this project useful, please consider giving it a star!**
+
+---
+
+## 📸 Screenshots
+
+[Add your screenshots here - SS1.png, SS2.png, SS3.png]
 
 ---
 
@@ -28,7 +39,7 @@ Have you ever tried to track your India Post parcel on their official website an
 ## ✨ Features
 
 ### Core Features
-- 🔍 **Real-Time Tracking** - Get instant updates on your parcels
+- 🔍 **Real-Time Tracking** - Get instant updates on your parcels with detailed office locations
 - 📦 **Multi-Carrier Support** - Track from 6 major Indian carriers:
   - 🇮🇳 India Post
   - 📦 Delhivery
@@ -39,6 +50,7 @@ Have you ever tried to track your India Post parcel on their official website an
 - 📱 **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
 - 🎨 **Beautiful UI** - Clean, modern interface with Material UI components
 - 🎬 **Smooth Animations** - Timeline animations powered by Framer Motion
+- 📍 **Detailed Locations** - Shows actual post office/hub names (e.g., "Patna RMS BPC", "Sonbersa SO")
 
 ### Phase 1 Features
 - 🌙 **Dark Mode** - Toggle between light and dark themes with persistence
@@ -48,6 +60,8 @@ Have you ever tried to track your India Post parcel on their official website an
 
 ### Phase 2 Features (Intelligent Insights)
 - ⚠️ **Delay Detection** - Automatically detects shipment delays (>48h, >72h thresholds)
+- 🔄 **Auto-Retry & Cold Start Handling** - Smart retry logic for production reliability
+- ⏰ **Keep-Alive Service** - Prevents backend sleep for faster response times
 - 🎯 **Delay Badges** - Color-coded status chips (On Track, Delayed, Critical)
 - 💡 **Smart Summary** - AI-powered natural language insights about your shipment
   - "Your parcel is on track and progressing normally"
