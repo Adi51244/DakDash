@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import httpx
 import os
+import json
 from typing import Optional
 from datetime import datetime
 
@@ -271,13 +272,30 @@ def normalize_tracking_data(tracking_number: str, data: dict) -> TrackingRespons
     if origin_info and origin_info.get("trackinfo"):
         for event in origin_info["trackinfo"]:
             # Extract event details
-            detail = event.get("tracking_detail", "") or event.get("Details", "Unknown location")
+            detail = event.get("tracking_detail", "") or event.get("Details", "")
             checkpoint = event.get("checkpoint_status", "") or event.get("StatusDescription", "")
             date = event.get("checkpoint_date", "") or event.get("Date", "")
             
-            if detail or checkpoint:  # Only add if we have some data
+            # Get the actual location (office name) - THIS IS THE KEY FIELD!
+            office_location = event.get("location", "")
+            
+            # Build comprehensive location string
+            # Priority: Use "location" field (office name) + "tracking_detail" (status description)
+            if office_location and detail:
+                # Combine office location with status detail
+                location = f"{office_location} - {detail}"
+            elif office_location:
+                # Just office location if no detail
+                location = office_location
+            elif detail:
+                # Fallback to just detail if no office location
+                location = detail
+            else:
+                location = "Unknown location"
+            
+            if location or checkpoint:  # Only add if we have some data
                 events.append(TrackingEvent(
-                    location=detail,
+                    location=location,
                     status=checkpoint,
                     timestamp=date
                 ))
@@ -310,13 +328,51 @@ def normalize_tracking_data(tracking_number: str, data: dict) -> TrackingRespons
     
     friendly_status = status_map.get(status.lower(), status.title() if status else "Unknown")
     
-    # Extract origin and destination
+    # Extract origin and destination with better location parsing
     origin = ""
-    destination = data.get("destination_info", {}).get("recipient_address", "")
+    destination = ""
     
-    # Try to get origin from first event
-    if events and len(events) > 0:
-        origin = events[-1].location if len(events) > 0 else ""
+    # Get origin from multiple sources
+    origin_info_data = data.get("origin_info", {})
+    if origin_info_data:
+        # Try country_name + postal_code
+        origin_country = origin_info_data.get("country_name", "")
+        origin_postal = origin_info_data.get("postal_code", "")
+        if origin_postal:
+            origin = f"{origin_postal}, {origin_country}" if origin_country else origin_postal
+        elif origin_country:
+            origin = origin_country
+    
+    # If no origin yet, try first event (oldest event is at the end after sort)
+    if not origin and events:
+        origin = events[-1].location
+    
+    # Get destination from multiple sources
+    destination_info_data = data.get("destination_info", {})
+    if destination_info_data:
+        # Try structured address fields first
+        recipient_city = destination_info_data.get("recipient_city", "")
+        recipient_state = destination_info_data.get("recipient_state", "")
+        recipient_postal = destination_info_data.get("recipient_postal", "")
+        recipient_address = destination_info_data.get("recipient_address", "")
+        
+        # Build destination from available parts
+        dest_parts = []
+        if recipient_city:
+            dest_parts.append(recipient_city)
+        if recipient_state and recipient_state != recipient_city:
+            dest_parts.append(recipient_state)
+        if recipient_postal:
+            dest_parts.append(recipient_postal)
+        
+        if dest_parts:
+            destination = ", ".join(dest_parts)
+        elif recipient_address:
+            destination = recipient_address
+    
+    # If no destination yet and package is delivered, use last event location
+    if not destination and events and friendly_status.lower() == "delivered":
+        destination = events[0].location  # First in sorted list (most recent)
     
     # Last updated timestamp
     last_updated = data.get("update_date", "") or data.get("updated_at", "")

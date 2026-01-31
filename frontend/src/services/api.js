@@ -8,11 +8,28 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 60000, // Increased to 60 seconds for Render cold starts
   headers: {
     'Content-Type': 'application/json',
   },
 })
+
+// Retry logic for failed requests (handles cold starts)
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config
+    
+    // If request hasn't been retried yet and it's a timeout/network error
+    if (!config.__retryCount && (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK')) {
+      config.__retryCount = 1
+      config.timeout = 90000 // Even longer timeout for retry (cold start can take 50+ seconds)
+      return apiClient.request(config)
+    }
+    
+    return Promise.reject(error)
+  }
+)
 
 /**
  * Track consignment by tracking number
@@ -45,8 +62,11 @@ export const trackConsignment = async (trackingNumber, carrier = 'india-post') =
         throw new Error(message || 'An unexpected error occurred.')
       }
     } else if (error.request) {
-      // Request made but no response
-      throw new Error('Unable to connect to the server. Please check your connection.')
+      // Request made but no response (likely cold start timeout)
+      if (error.code === 'ECONNABORTED') {
+        throw new Error('Server is starting up (this takes ~50 seconds on first request). Please wait and try again.')
+      }
+      throw new Error('Unable to connect to the server. The backend may be waking up. Please wait 30 seconds and try again.')
     } else {
       // Something else happened
       throw new Error('An unexpected error occurred. Please try again.')

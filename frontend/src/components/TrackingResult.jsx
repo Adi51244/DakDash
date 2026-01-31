@@ -107,7 +107,7 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
         <Paper
           elevation={3}
           sx={{
-            p: 3,
+            p: { xs: 2, sm: 3 },
             borderRadius: 3,
             background: 'linear-gradient(135deg, #C62828 0%, #EF5350 100%)',
             color: 'white',
@@ -115,23 +115,24 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
         >
           <Stack spacing={2}>
             <Stack
-              direction="row"
+              direction={{ xs: 'column', sm: 'row' }}
               justifyContent="space-between"
-              alignItems="center"
-              flexWrap="wrap"
+              alignItems={{ xs: 'flex-start', sm: 'center' }}
               gap={2}
             >
-              <Box>
+              <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
                 <Typography variant="caption" sx={{ opacity: 0.9 }}>
                   Tracking Number
                 </Typography>
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
                   <Typography
                     variant="h5"
                     sx={{
                       fontFamily: 'monospace',
                       fontWeight: 600,
                       letterSpacing: '0.05em',
+                      fontSize: { xs: '1.1rem', sm: '1.5rem' },
+                      wordBreak: 'break-all',
                     }}
                   >
                     {data.tracking_number}
@@ -151,7 +152,13 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
                 </Stack>
               </Box>
 
-              <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+              <Stack 
+                direction="row" 
+                spacing={1} 
+                alignItems="center" 
+                flexWrap="wrap"
+                sx={{ width: { xs: '100%', sm: 'auto' } }}
+              >
                 <Chip
                   icon={getStatusIcon(data.status)}
                   label={data.status}
@@ -159,7 +166,7 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
                     backgroundColor: 'white',
                     color: 'text.primary',
                     fontWeight: 600,
-                    fontSize: '0.95rem',
+                    fontSize: { xs: '0.8rem', sm: '0.95rem' },
                     px: 1,
                   }}
                 />
@@ -196,18 +203,36 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
         </Paper>
 
         {/* Parcel Information Cards */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Card elevation={2} sx={{ height: '100%', borderRadius: 2 }}>
-              <CardContent>
+        <Grid container spacing={{ xs: 2, sm: 2, md: 2 }}>
+          <Grid item xs={12} sm={6}>
+            <Card 
+              elevation={2} 
+              sx={{ 
+                height: '100%', 
+                borderRadius: 2,
+                minHeight: { xs: 'auto', sm: '120px' }
+              }}
+            >
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                 <Stack spacing={1}>
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <LocationOn color="primary" />
-                    <Typography variant="h6" fontWeight={600}>
+                    <LocationOn color="primary" fontSize="small" />
+                    <Typography 
+                      variant="h6" 
+                      fontWeight={600}
+                      sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
+                    >
                       Origin
                     </Typography>
                   </Stack>
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{ 
+                      fontSize: { xs: '0.875rem', sm: '1rem' },
+                      wordBreak: 'break-word'
+                    }}
+                  >
                     {data.origin || 'Information not available'}
                   </Typography>
                 </Stack>
@@ -215,17 +240,35 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Card elevation={2} sx={{ height: '100%', borderRadius: 2 }}>
-              <CardContent>
+          <Grid item xs={12} sm={6}>
+            <Card 
+              elevation={2} 
+              sx={{ 
+                height: '100%', 
+                borderRadius: 2,
+                minHeight: { xs: 'auto', sm: '120px' }
+              }}
+            >
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                 <Stack spacing={1}>
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <LocationOn color="primary" />
-                    <Typography variant="h6" fontWeight={600}>
+                    <LocationOn color="primary" fontSize="small" />
+                    <Typography 
+                      variant="h6" 
+                      fontWeight={600}
+                      sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
+                    >
                       Destination
                     </Typography>
                   </Stack>
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{ 
+                      fontSize: { xs: '0.875rem', sm: '1rem' },
+                      wordBreak: 'break-word'
+                    }}
+                  >
                     {data.destination || 'Information not available'}
                   </Typography>
                 </Stack>
@@ -235,21 +278,36 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
         </Grid>
 
         {/* Tracking Timeline */}
-        <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
+        <Paper 
+          elevation={2} 
+          sx={{ 
+            p: { xs: 2, sm: 3 }, 
+            borderRadius: 3 
+          }}
+        >
           <Stack spacing={3}>
             <Stack
-              direction="row"
+              direction={{ xs: 'column', sm: 'row' }}
               justifyContent="space-between"
-              alignItems="center"
+              alignItems={{ xs: 'flex-start', sm: 'center' }}
+              gap={1}
             >
               <Stack direction="row" spacing={1} alignItems="center">
-                <Event color="primary" />
-                <Typography variant="h6" fontWeight={600}>
+                <Event color="primary" fontSize="small" />
+                <Typography 
+                  variant="h6" 
+                  fontWeight={600}
+                  sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
+                >
                   Tracking Timeline
                 </Typography>
               </Stack>
 
-              <Typography variant="caption" color="text.secondary">
+              <Typography 
+                variant="caption" 
+                color="text.secondary"
+                sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+              >
                 {data.events?.length || 0} events
               </Typography>
             </Stack>
@@ -270,25 +328,43 @@ function TrackingResult({ data, onNewSearch, onRefresh, lastRefreshed }) {
 
         {/* Action Buttons */}
         <Box textAlign="center">
-          <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap">
+          <Stack 
+            direction={{ xs: 'column', sm: 'row' }} 
+            spacing={2} 
+            justifyContent="center" 
+            alignItems="stretch"
+            sx={{ 
+              '& > button': { 
+                width: { xs: '100%', sm: 'auto' } 
+              } 
+            }}
+          >
             <Button
               variant="outlined"
               startIcon={<Refresh />}
               onClick={onRefresh}
-              sx={{ px: 4, py: 1.5 }}
+              sx={{ px: { xs: 3, sm: 4 }, py: 1.5 }}
             >
               Refresh
             </Button>
             <Button
               variant="outlined"
               onClick={onNewSearch}
-              sx={{ px: 4, py: 1.5 }}
+              sx={{ px: { xs: 3, sm: 4 }, py: 1.5 }}
             >
               Track Another Parcel
             </Button>
           </Stack>
           {lastRefreshed && (
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+            <Typography 
+              variant="caption" 
+              color="text.secondary" 
+              sx={{ 
+                mt: 1, 
+                display: 'block',
+                fontSize: { xs: '0.7rem', sm: '0.75rem' }
+              }}
+            >
               Last refreshed: {formatLastRefreshed()}
             </Typography>
           )}

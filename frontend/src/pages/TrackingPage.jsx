@@ -71,7 +71,14 @@ function TrackingPage() {
       // Update URL with tracking number and carrier
       navigate(`/track?number=${encodeURIComponent(number)}&carrier=${selectedCarrier}`, { replace: true })
     } catch (err) {
-      setError(err.message || 'Failed to fetch tracking information')
+      // Show user-friendly error messages
+      const errorMessage = err.message || 'Failed to fetch tracking information'
+      setError(errorMessage)
+      
+      // If it's a cold start timeout, show helpful message
+      if (errorMessage.includes('starting up') || errorMessage.includes('waking up')) {
+        console.log('Backend cold start detected - this is normal on first request after inactivity')
+      }
     } finally {
       setLoading(false)
     }
